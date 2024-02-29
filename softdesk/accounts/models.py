@@ -26,7 +26,7 @@ class SoftUser(AbstractUser):
     can_be_contacted = models.BooleanField(default=True)
     can_be_shared = models.BooleanField(default=True)
 
-    REQUIRED_FIELDS = ["birthdate"]
+    REQUIRED_FIELDS = ["email", "birthdate"]
 
     def save(self, *args, **kwargs):
         today = datetime.date.today()

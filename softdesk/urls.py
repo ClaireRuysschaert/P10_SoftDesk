@@ -16,8 +16,17 @@ Including another URLconf
 """
 
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+from rest_framework import routers
+from softdesk.accounts.views import SoftUserViewSet
+
+router = routers.DefaultRouter()
+router.register(r"users", SoftUserViewSet)
+
 
 urlpatterns = [
+    path("", include(router.urls)),
     path("admin/", admin.site.urls),
 ]
+
+urlpatterns += router.urls

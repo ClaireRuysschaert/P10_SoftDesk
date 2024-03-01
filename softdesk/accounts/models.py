@@ -1,5 +1,3 @@
-from datetime import timezone
-import datetime
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
@@ -27,11 +25,3 @@ class SoftUser(AbstractUser):
     can_be_shared = models.BooleanField(default=True)
 
     REQUIRED_FIELDS = ["email", "birthdate"]
-
-    def save(self, *args, **kwargs):
-        today = datetime.date.today()
-        age = (today - self.birthdate) // datetime.timedelta(days=365.2425)
-        if age < 15:
-            self.can_be_contacted = False
-            self.can_be_shared = False
-        super().save(*args, **kwargs)

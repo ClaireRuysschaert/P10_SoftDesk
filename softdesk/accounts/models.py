@@ -25,3 +25,9 @@ class SoftUser(AbstractUser):
     can_be_shared = models.BooleanField(default=True)
 
     REQUIRED_FIELDS = ["email", "birthdate"]
+
+
+class Contributor(models.Model):
+    user = models.ForeignKey(SoftUser, on_delete=models.CASCADE)
+    project = models.ForeignKey('projects.Project', on_delete=models.CASCADE)
+    date_joined = models.DateTimeField(auto_now_add=True)

@@ -4,8 +4,8 @@ from softdesk.accounts.models import SoftUser, Contributor
 
 
 class Project(models.Model):
-    name = models.CharField(max_length=100)
-    description = models.TextField()
+    name = models.CharField(max_length=100, unique=True)
+    description = models.TextField(blank=True, null=True)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     author = models.ForeignKey(

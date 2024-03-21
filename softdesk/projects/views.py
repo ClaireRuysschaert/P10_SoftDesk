@@ -9,12 +9,12 @@ class IsContributor(permissions.BasePermission):
     Custom permission to only allow contributors of a project to edit it.
     """
 
-    def has_permission(self, request:HttpRequest, view) -> bool:
+    def has_permission(self, request: HttpRequest, view) -> bool:
         if view.action == ["update", "partial_update", "destroy"]:
             return request.user and request.user.is_authenticated
         return True
 
-    def has_object_permission(self, request:HttpRequest, view, obj:Project) -> bool:
+    def has_object_permission(self, request: HttpRequest, view, obj: Project) -> bool:
         """
         Return True if the user is a contributor of the project.
         """
@@ -24,10 +24,13 @@ class IsContributor(permissions.BasePermission):
 class ProjectViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows projects to be viewed or edited.
+
+    Attributes:
+        queryset (QuerySet): The queryset of projects.
+        serializer_class (Serializer): The serializer class for projects.
+        permission_classes (list): The list of permission classes for the viewset.
     """
 
     queryset = Project.objects.all().order_by("-created_on")
     serializer_class = ProjectSerializer
     permission_classes = [permissions.IsAuthenticated, IsContributor]
-
-

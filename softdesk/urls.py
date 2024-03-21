@@ -19,12 +19,13 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
 from softdesk.accounts.views import SoftUserViewSet, ContributorViewSet
-from softdesk.projects.views import ProjectViewSet
+from softdesk.projects.views import ProjectViewSet, IssueViewSet
 
 router = routers.DefaultRouter()
 router.register(r"users", SoftUserViewSet)
 router.register(r"contributors", ContributorViewSet)
 router.register(r"projects", ProjectViewSet)
+router.register(r"issues", IssueViewSet)
 
 urlpatterns = [
     path("", include(router.urls)),

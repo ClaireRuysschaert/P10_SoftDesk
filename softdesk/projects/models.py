@@ -1,3 +1,5 @@
+import uuid
+
 from django.db import models
 
 from softdesk.accounts.models import SoftUser, Contributor
@@ -77,3 +79,19 @@ class Issue(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Comment(models.Model):
+    author = models.ForeignKey(
+        SoftUser, on_delete=models.CASCADE, related_name="authored_comments"
+    )
+    issue = models.ForeignKey(
+        Issue, on_delete=models.CASCADE, related_name="comments"
+    )
+    content = models.TextField(blank=True, null=True)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
+
+    def __str__(self):
+        return self.content

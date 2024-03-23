@@ -32,8 +32,8 @@ router.register(r"comments", CommentViewSet)
 urlpatterns = [
     path("", include(router.urls)),
     path("admin/", admin.site.urls),
-    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path("token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
+    path("token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
 ]
 
 urlpatterns += router.urls

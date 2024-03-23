@@ -13,7 +13,8 @@ class SoftUser(AbstractUser):
     - can_be_shared: BooleanField indicating if the user's information can be shared.
 
     The birthdate field is required due to RGPD (General Data Protection Regulation).
-    We calculate the user's age and if it is less than 15, the can_be_contacted and can_be_shared fields are set to False.
+    We calculate the user's age and if it is less than 15, the can_be_contacted and can_be_shared
+    fields are set to False.
 
     Overrides the save method to enforce the age restriction.
 

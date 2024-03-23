@@ -2,6 +2,7 @@ from rest_framework import viewsets, permissions
 from softdesk.accounts.models import Contributor, SoftUser
 from softdesk.accounts.serializers import SoftUserSerializer, ContributorSerializer
 
+
 class SoftUserViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
@@ -10,6 +11,7 @@ class SoftUserViewSet(viewsets.ModelViewSet):
     queryset = SoftUser.objects.all().order_by("-date_joined")
     serializer_class = SoftUserSerializer
     permission_classes = [permissions.IsAuthenticated]
+
 
 class ContributorViewSet(viewsets.ModelViewSet):
     """

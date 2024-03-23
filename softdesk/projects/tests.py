@@ -43,7 +43,9 @@ class ProjectViewSetTestCase(TestCase):
         self.contributor_client.force_authenticate(user=self.contributor)
 
     def test_anonymous_user_cannot_access_project(self):
-        response: Response = self.anonymous_client.get(reverse("project-detail", args=[self.project.pk]))
+        response: Response = self.anonymous_client.get(
+            reverse("project-detail", args=[self.project.pk])
+        )
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_only_contributor_and_project_user_can_access_project(self):
@@ -54,7 +56,9 @@ class ProjectViewSetTestCase(TestCase):
             (self.contributor_client, status.HTTP_200_OK),
         ]
         for client, expected_status in clients_and_responses:
-            response: Response = client.get(reverse("project-detail", args=[self.project.pk]))
+            response: Response = client.get(
+                reverse("project-detail", args=[self.project.pk])
+            )
             self.assertEqual(response.status_code, expected_status)
 
     def test_project_creation(self):
@@ -92,7 +96,8 @@ class ProjectViewSetTestCase(TestCase):
             (self.project_client, status.HTTP_200_OK),
         ]
         for client, expected_status in clients_and_responses:
-            response: Response = client.patch(reverse("project-detail", args=[self.project.pk]), {"name": "New Name"}
+            response: Response = client.patch(
+                reverse("project-detail", args=[self.project.pk]), {"name": "New Name"}
             )
             self.assertEqual(response.status_code, expected_status)
             self.project.refresh_from_db()
@@ -109,7 +114,9 @@ class ProjectViewSetTestCase(TestCase):
             (self.project_client, status.HTTP_204_NO_CONTENT),
         ]
         for client, expected_status in clients_and_responses:
-            response: Response = client.delete(reverse("project-detail", args=[self.project.pk]))
+            response: Response = client.delete(
+                reverse("project-detail", args=[self.project.pk])
+            )
             self.assertEqual(response.status_code, expected_status)
 
 
@@ -158,7 +165,9 @@ class IssueViewSetTestCase(TestCase):
         self.contributor_client.force_authenticate(user=self.contributor)
 
     def test_anonymous_user_cannot_access_issue(self):
-        response: Response = self.anonymous_client.get(reverse("issue-detail", args=[self.issue.pk]))
+        response: Response = self.anonymous_client.get(
+            reverse("issue-detail", args=[self.issue.pk])
+        )
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_only_contributor_and_issue_user_can_access_issue(self):
@@ -169,7 +178,9 @@ class IssueViewSetTestCase(TestCase):
             (self.contributor_client, status.HTTP_200_OK),
         ]
         for client, expected_status in clients_and_responses:
-            response: Response = client.get(reverse("issue-detail", args=[self.issue.pk]))
+            response: Response = client.get(
+                reverse("issue-detail", args=[self.issue.pk])
+            )
             self.assertEqual(response.status_code, expected_status)
 
     def test_issue_creation(self):
@@ -209,7 +220,9 @@ class IssueViewSetTestCase(TestCase):
             (self.issue_client, status.HTTP_200_OK),
         ]
         for client, expected_status in clients_and_responses:
-            response: Response = client.patch(reverse("issue-detail", args=[self.issue.pk]), {"name": "New Title"})
+            response: Response = client.patch(
+                reverse("issue-detail", args=[self.issue.pk]), {"name": "New Title"}
+            )
             self.assertEqual(response.status_code, expected_status)
             self.issue.refresh_from_db()
             self.assertEqual(
@@ -225,7 +238,9 @@ class IssueViewSetTestCase(TestCase):
             (self.issue_client, status.HTTP_204_NO_CONTENT),
         ]
         for client, expected_status in clients_and_responses:
-            response: Response = client.delete(reverse("issue-detail", args=[self.issue.pk]))
+            response: Response = client.delete(
+                reverse("issue-detail", args=[self.issue.pk])
+            )
             self.assertEqual(response.status_code, expected_status)
 
     def test_assign_to_must_be_contributor_of_project(self):
@@ -246,7 +261,10 @@ class IssueViewSetTestCase(TestCase):
             response: Response = client.post(reverse("issue-list"), issue_data)
             self.assertEqual(response.status_code, expected_status)
             if expected_status == status.HTTP_400_BAD_REQUEST:
-                self.assertEqual(response.data["assign_to"], ["Assignee must be a contributor of the project."])
+                self.assertEqual(
+                    response.data["assign_to"],
+                    ["Assignee must be a contributor of the project."],
+                )
 
 
 class CommentViewSetTestCase(TestCase):
@@ -299,7 +317,9 @@ class CommentViewSetTestCase(TestCase):
         self.contributor_client.force_authenticate(user=self.contributor)
 
     def test_anonymous_user_cannot_access_comment(self):
-        response: Response = self.anonymous_client.get(reverse("comment-detail", args=[self.comment.pk]))
+        response: Response = self.anonymous_client.get(
+            reverse("comment-detail", args=[self.comment.pk])
+        )
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_only_contributor_and_comment_user_can_access_comment(self):
@@ -310,7 +330,9 @@ class CommentViewSetTestCase(TestCase):
             (self.contributor_client, status.HTTP_200_OK),
         ]
         for client, expected_status in clients_and_responses:
-            response: Response = client.get(reverse("comment-detail", args=[self.comment.pk]))
+            response: Response = client.get(
+                reverse("comment-detail", args=[self.comment.pk])
+            )
             self.assertEqual(response.status_code, expected_status)
 
     def test_comment_creation(self):
@@ -348,12 +370,19 @@ class CommentViewSetTestCase(TestCase):
             (self.comment_client, status.HTTP_200_OK),
         ]
         for client, expected_status in clients_and_responses:
-            response: Response = client.patch(reverse("comment-detail", args=[self.comment.pk]), {"content": "New Content"})
+            response: Response = client.patch(
+                reverse("comment-detail", args=[self.comment.pk]),
+                {"content": "New Content"},
+            )
             self.assertEqual(response.status_code, expected_status)
             self.comment.refresh_from_db()
             self.assertEqual(
                 self.comment.content,
-                original_comment_content if client != self.comment_client else "New Content",
+                (
+                    original_comment_content
+                    if client != self.comment_client
+                    else "New Content"
+                ),
             )
 
     def test_only_comment_user_can_delete_comment(self):
@@ -364,5 +393,7 @@ class CommentViewSetTestCase(TestCase):
             (self.comment_client, status.HTTP_204_NO_CONTENT),
         ]
         for client, expected_status in clients_and_responses:
-            response: Response = client.delete(reverse("comment-detail", args=[self.comment.pk]))
+            response: Response = client.delete(
+                reverse("comment-detail", args=[self.comment.pk])
+            )
             self.assertEqual(response.status_code, expected_status)

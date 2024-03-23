@@ -1,8 +1,12 @@
 from django.http import HttpRequest
-from rest_framework import viewsets, permissions, serializers
+from rest_framework import viewsets, permissions
 from softdesk.filters import CommentFilter
 from softdesk.projects.models import Comment, Issue, Project
-from softdesk.projects.serializers import CommentSerializer, IssueSerializer, ProjectSerializer
+from softdesk.projects.serializers import (
+    CommentSerializer,
+    IssueSerializer,
+    ProjectSerializer,
+)
 
 
 class IsContributor(permissions.BasePermission):
@@ -14,17 +18,16 @@ class IsContributor(permissions.BasePermission):
         """
         Return True if permission is granted to the request, else False
         """
-        if view.action == 'create':
-            if 'project' in request.data:
-                project_id = request.data.get('project')
+        if view.action == "create":
+            if "project" in request.data:
+                project_id = request.data.get("project")
                 project = Project.objects.get(pk=project_id)
                 return request.user in project.contributors.all()
-            elif 'issue' in request.data:
-                issue_id = request.data.get('issue')
+            elif "issue" in request.data:
+                issue_id = request.data.get("issue")
                 issue = Issue.objects.get(pk=issue_id)
                 return request.user in issue.project.contributors.all()
         return True
-
 
     def has_object_permission(self, request: HttpRequest, view, obj) -> bool:
         """
@@ -32,11 +35,11 @@ class IsContributor(permissions.BasePermission):
         """
         if not request.user.is_authenticated:
             return False
-        if type(obj) == Comment:
+        if type(obj) is Comment:
             return request.user in obj.issue.project.contributors.all()
-        elif type(obj) == Issue:
+        elif type(obj) is Issue:
             return request.user in obj.project.contributors.all()
-        elif type(obj) == Project:
+        elif type(obj) is Project:
             return request.user in obj.contributors.all()
         return False
 
@@ -86,7 +89,7 @@ class IssueViewSet(viewsets.ModelViewSet):
     serializer_class = IssueSerializer
     permission_classes = [IsContributor, IsAuthor, permissions.IsAuthenticated]
     filterset_fields = ["project_id", "assign_to_id", "status", "priority"]
-    
+
     def perform_create(self, serializer: IssueSerializer):
         serializer.save(author=self.request.user)
 
@@ -100,6 +103,7 @@ class CommentViewSet(viewsets.ModelViewSet):
         serializer_class (Serializer): The serializer class for comments.
         permission_classes (list): The list of permission classes for the viewset.
     """
+
     queryset = Comment.objects.all().order_by("-created_on")
     serializer_class = CommentSerializer
     permission_classes = [IsContributor, IsAuthor, permissions.IsAuthenticated]

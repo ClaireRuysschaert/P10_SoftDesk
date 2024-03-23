@@ -11,20 +11,50 @@ class IsContributor(permissions.BasePermission):
     """
 
     def has_permission(self, request: HttpRequest, view) -> bool:
-        if view.action == ["update", "partial_update", "destroy"]:
-            return request.user and request.user.is_authenticated
+        """
+        Return True if permission is granted to the request, else False
+        """
+        if view.action == 'create':
+            if 'project' in request.data:
+                project_id = request.data.get('project')
+                project = Project.objects.get(pk=project_id)
+                return request.user in project.contributors.all()
+            elif 'issue' in request.data:
+                issue_id = request.data.get('issue')
+                issue = Issue.objects.get(pk=issue_id)
+                return request.user in issue.project.contributors.all()
         return True
+
 
     def has_object_permission(self, request: HttpRequest, view, obj) -> bool:
         """
         Return True if the user is a contributor of the project.
         """
+        if not request.user.is_authenticated:
+            return False
         if type(obj) == Comment:
             return request.user in obj.issue.project.contributors.all()
         elif type(obj) == Issue:
             return request.user in obj.project.contributors.all()
         elif type(obj) == Project:
             return request.user in obj.contributors.all()
+        return False
+
+
+class IsAuthor(permissions.BasePermission):
+    """
+    Custom permission to only allow authors of an object to edit it.
+    """
+
+    def has_object_permission(self, request: HttpRequest, view, obj) -> bool:
+        """
+        Return True if the user is the author of the object.
+        """
+        if not request.user.is_authenticated:
+            return False
+        if view.action in ["update", "partial_update", "destroy"]:
+            return obj.author == request.user
+        return True
 
 
 class ProjectViewSet(viewsets.ModelViewSet):
@@ -39,7 +69,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
 
     queryset = Project.objects.all().order_by("-created_on")
     serializer_class = ProjectSerializer
-    permission_classes = [permissions.IsAuthenticated, IsContributor]
+    permission_classes = [IsContributor, IsAuthor, permissions.IsAuthenticated]
 
 
 class IssueViewSet(viewsets.ModelViewSet):
@@ -54,7 +84,7 @@ class IssueViewSet(viewsets.ModelViewSet):
 
     queryset = Issue.objects.all().order_by("-created_on")
     serializer_class = IssueSerializer
-    permission_classes = [permissions.IsAuthenticated, IsContributor]
+    permission_classes = [IsContributor, IsAuthor, permissions.IsAuthenticated]
     filterset_fields = ["project_id", "assign_to_id", "status", "priority"]
     
     def perform_create(self, serializer: IssueSerializer):
@@ -72,7 +102,7 @@ class CommentViewSet(viewsets.ModelViewSet):
     """
     queryset = Comment.objects.all().order_by("-created_on")
     serializer_class = CommentSerializer
-    permission_classes = [permissions.IsAuthenticated, IsContributor]
+    permission_classes = [IsContributor, IsAuthor, permissions.IsAuthenticated]
     filterset_class = CommentFilter
 
     def perform_create(self, serializer: CommentSerializer):

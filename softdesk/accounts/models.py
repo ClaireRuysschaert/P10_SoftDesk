@@ -18,13 +18,11 @@ class SoftUser(AbstractUser):
     Overrides the save method to enforce the age restriction.
 
     """
-
+    email = models.EmailField()
     birthdate = models.DateField()
     updated_on = models.DateTimeField(auto_now=True)
     can_be_contacted = models.BooleanField(default=True)
     can_be_shared = models.BooleanField(default=True)
-
-    REQUIRED_FIELDS = ["email", "birthdate"]
 
 
 class Contributor(models.Model):

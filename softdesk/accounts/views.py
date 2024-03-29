@@ -17,7 +17,12 @@ class ContributorViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows contributors to be viewed or edited.
     """
-    queryset = Contributor.objects.all().order_by("-date_joined").select_related("user", "project")
+
+    queryset = (
+        Contributor.objects.all()
+        .order_by("-date_joined")
+        .select_related("user", "project")
+    )
     serializer_class = ContributorSerializer
     permission_classes = [permissions.IsAuthenticated]
     filterset_fields = ["project_id", "user_id"]

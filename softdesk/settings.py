@@ -51,20 +51,23 @@ REST_FRAMEWORK = {
     ],
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 10,
-    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
-    "DEFAULT_AUTHENTICATION_CLASSES": ("rest_framework_simplejwt.authentication.JWTAuthentication",),
+    "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"],
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+        "rest_framework.authentication.SessionAuthentication",
+    ),
 }
 
 AUTH_USER_MODEL = "accounts.SoftUser"
 if DEBUG:
     SIMPLE_JWT = {
-        'ACCESS_TOKEN_LIFETIME': timedelta(days=15),
-        'REFRESH_TOKEN_LIFETIME': timedelta(days=30),
+        "ACCESS_TOKEN_LIFETIME": timedelta(days=15),
+        "REFRESH_TOKEN_LIFETIME": timedelta(days=30),
     }
 else:
     SIMPLE_JWT = {
-        'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
-        'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+        "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
+        "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
     }
 
 MIDDLEWARE = [

@@ -74,7 +74,8 @@ class Issue(models.Model):
             ("BUG", "bug"),
             ("TASK", "task"),
             ("FEAT", "feature"),
-        ], default="TASK",
+        ],
+        default="TASK",
     )
 
     def __str__(self):
@@ -85,9 +86,7 @@ class Comment(models.Model):
     author = models.ForeignKey(
         SoftUser, on_delete=models.CASCADE, related_name="authored_comments"
     )
-    issue = models.ForeignKey(
-        Issue, on_delete=models.CASCADE, related_name="comments"
-    )
+    issue = models.ForeignKey(Issue, on_delete=models.CASCADE, related_name="comments")
     content = models.TextField(blank=True, null=True)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)

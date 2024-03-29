@@ -19,6 +19,7 @@ class SoftUser(AbstractUser):
     Overrides the save method to enforce the age restriction.
 
     """
+
     email = models.EmailField()
     birthdate = models.DateField()
     updated_on = models.DateTimeField(auto_now=True)
@@ -28,9 +29,9 @@ class SoftUser(AbstractUser):
 
 class Contributor(models.Model):
     user = models.ForeignKey(SoftUser, on_delete=models.CASCADE)
-    project = models.ForeignKey('projects.Project', on_delete=models.CASCADE)
+    project = models.ForeignKey("projects.Project", on_delete=models.CASCADE)
     date_joined = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = ['user', 'project']
-        ordering = ['-date_joined']
+        unique_together = ["user", "project"]
+        ordering = ["-date_joined"]

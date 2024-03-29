@@ -12,8 +12,8 @@ class ContributorInline(admin.TabularInline):
 @admin.register(Project)
 class ProjectAdmin(admin.ModelAdmin):
     model = Project
-    list_display = ('name', 'description', 'created_on', 'updated_on', 'author', 'type')
-    search_fields = ('name', 'author', 'type')
+    list_display = ("name", "description", "created_on", "updated_on", "author", "type")
+    search_fields = ("name", "author", "type")
     inlines = [ContributorInline]
 
 

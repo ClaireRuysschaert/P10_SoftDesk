@@ -22,13 +22,8 @@ class ProjectSerializer(serializers.ModelSerializer):
 
 class IssueSerializer(serializers.ModelSerializer):
     author = serializers.PrimaryKeyRelatedField(queryset=SoftUser.objects.all())
-    author_username = serializers.CharField(source="author.username", read_only=True)
     assign_to = serializers.PrimaryKeyRelatedField(queryset=SoftUser.objects.all())
-    assign_to_username = serializers.CharField(
-        source="assign_to.username", read_only=True
-    )
     project = serializers.PrimaryKeyRelatedField(queryset=Project.objects.all())
-    project_name = serializers.CharField(source="project.name", read_only=True)
 
     class Meta:
         model = Issue
@@ -37,11 +32,8 @@ class IssueSerializer(serializers.ModelSerializer):
             "name",
             "description",
             "author",
-            "author_username",
             "assign_to",
-            "assign_to_username",
             "project",
-            "project_name",
             "created_on",
             "updated_on",
             "status",
@@ -65,13 +57,8 @@ class IssueSerializer(serializers.ModelSerializer):
 
 class CommentSerializer(serializers.ModelSerializer):
     author = serializers.PrimaryKeyRelatedField(queryset=SoftUser.objects.all())
-    author_username = serializers.CharField(source="author.username", read_only=True)
     issue = serializers.PrimaryKeyRelatedField(queryset=Issue.objects.all())
-    issue_name = serializers.CharField(source="issue.name", read_only=True)
     project = serializers.PrimaryKeyRelatedField(source="issue.project", read_only=True)
-    project_name = serializers.PrimaryKeyRelatedField(
-        source="issue.project.name", read_only=True
-    )
 
     class Meta:
         model = Comment
@@ -80,11 +67,8 @@ class CommentSerializer(serializers.ModelSerializer):
             "uuid",
             "content",
             "author",
-            "author_username",
             "issue",
-            "issue_name",
             "project",
-            "project_name",
             "created_on",
             "updated_on",
         ]

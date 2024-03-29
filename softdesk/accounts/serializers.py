@@ -28,21 +28,12 @@ class SoftUserSerializer(serializers.ModelSerializer):
 
 
 class ContributorSerializer(serializers.ModelSerializer):
-    username = serializers.CharField(source="user.username", read_only=True)
-    project_name = serializers.CharField(source="project.name", read_only=True)
-    project_author = serializers.CharField(
-        source="project.author.username", read_only=True
-    )
-
     class Meta:
         model = Contributor
         fields = [
             "id",
             "user",
-            "username",
             "project",
-            "project_name",
-            "project_author",
             "date_joined",
         ]
         read_only_fields = ["date_joined"]

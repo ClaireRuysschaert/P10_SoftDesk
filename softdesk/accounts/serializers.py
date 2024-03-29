@@ -17,7 +17,16 @@ class SoftUserSerializer(serializers.ModelSerializer):
             "can_be_shared",
         ]
 
-    def validate_birthdate(self, value):
+    def validate_birthdate(self, value: datetime.date):
+        """
+        Validates the birthdate value.
+
+        Returns:
+            datetime.date: The validated birthdate value.
+
+        Raises:
+            serializers.ValidationError: If the age is less than 15 years old.
+        """
         today = datetime.date.today()
         age = (today - value) // datetime.timedelta(days=365.2425)
         if age < 15:
